@@ -1,4 +1,5 @@
-// Render video: node core/render/video.mjs <demo> [--fps 24] [--workers 3] [--q 'k=v'] [--out <demo>/out/video.mp4] [--size 1920x1080]
+// Render video: node core/render/video.mjs <demo> [--fps 24] [--workers 3] [--q 'k=v'] [--out <demo>/out/video.mp4] [--size 1920x1080] [--frames a:b]
+// --frames a:b renders only frames a (inclusive) to b (exclusive) of the film, at their own times (t = frame / fps); chunks.mjs uses it for long films
 // when several films are in production in parallel, use 3 workers (the default); a render on its own can go up to 6
 // each worker has its own browser; JPEG screenshots are piped to ffmpeg; the segments are joined losslessly at the end
 // with the environment variable RENDER_SLOTS (an integer) set, the machine runs at most that many full-film renders at once (slot.mjs); unset means no limit. Segment files go in a hidden directory next to --out, unique to each render, deleted when the render finishes (or fails, or is interrupted).
@@ -49,11 +50,14 @@ const release = process.env.RENDER_SLOTS ? await (await import('./slot.mjs')).ac
 segDir = fs.mkdtempSync(path.join(outDir, `.${base}_segs-`)); fs.writeFileSync(path.join(segDir, 'pid'), String(process.pid));
 const probe = await openDemo(dir, { w: W, h: H, q: Q }); const DUR = await probe.page.evaluate(() => window.DUR); await probe.browser.close();
 if (!(DUR > 0)) fail(`window.DUR must be a positive number of seconds (got ${DUR})`);
-const TOTAL = Math.round(DUR * FPS), per = Math.ceil(TOTAL / WK), t0 = Date.now();
+const ALL = Math.round(DUR * FPS), FR = opt('--frames', null);
+let F0 = 0, F1 = ALL;
+if (FR !== null) { const m = /^(\d+):(\d+)$/.exec(FR); if (!m || +m[1] >= +m[2] || +m[2] > ALL) fail(`bad --frames ${FR}: give a:b with 0 ≤ a < b ≤ ${ALL} (the film has ${ALL} frames at ${FPS} fps)`); F0 = +m[1]; F1 = +m[2]; }
+const TOTAL = F1 - F0, per = Math.ceil(TOTAL / WK), t0 = Date.now();
 let abort = null;   // a worker found the WebGL context lost: every worker stops feeding and lets its ffmpeg finish (on Windows a killed
                     // ffmpeg keeps its segment busy for a while), then the render fails with nothing left behind
 try { await Promise.all([...Array(WK)].map(async (_, w) => {
-  const a = w * per, b = Math.min(TOTAL, a + per); if (a >= b) return;
+  const a = F0 + w * per, b = Math.min(F1, a + per); if (a >= b) return;
   const { browser, page } = await openDemo(dir, { w: W, h: H, q: Q });
   // cwd set to the segment directory with relative filenames: that way ffmpeg won't read characters such as # ? in the path as protocol syntax
   const ff = spawn('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(FPS), '-c:v', 'mjpeg', '-i', '-',

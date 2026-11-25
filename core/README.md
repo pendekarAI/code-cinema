@@ -32,7 +32,8 @@ The viewport is 1920×1080 at device scale 1, or `--size WxH`. `--q 'k=v&…'` r
 | Command | What it does |
 |---|---|
 | `node core/render/still.mjs <demo> <t> [<t> …] [--range a:b:step] [--prefix t_] [--out dir]` | review stills as JPEGs (default `<demo>/stills/t_<t>.jpg`) |
-| `node core/render/video.mjs <demo> [--fps 24] [--workers 3] [--out <demo>/out/video.mp4]` | every frame to a video; up to 6 workers for a single render. Each parallel version needs its own `--out` |
+| `node core/render/video.mjs <demo> [--fps 24] [--workers 3] [--out <demo>/out/video.mp4] [--frames a:b]` | every frame to a video; up to 6 workers for a single render. Each parallel version needs its own `--out`. `--frames a:b` renders only frames a to b−1, at their own times |
+| `node core/render/chunks.mjs <film> [--fps 24] [--chunk 30] [--workers 3] [--only 1,7] [--redo 3,4] [--fresh] [--out …]` | long films (above 60 s, up to 20 min): renders chunks of `--chunk` seconds into `<out>.chunks/`, checks each chunk's frame count, keeps finished chunks so a stopped run carries on where it left off, then joins them losslessly and checks the total against `DUR` × fps. `--only` renders test chunks without joining; `--redo` renders chunks again after a change |
 | `node core/render/events.mjs <demo> [--out <file>]` | export `{dur, ev}` to `<demo>/events.json` |
 | `node core/render/readcheck.mjs <demo> [--step 0.04] [--latin-cps 15] [--cjk-cps 4.5] [--pad 1.5] [--min 1.5]` | reading-time check (below) |
 | `.venv/bin/python core/render/sheet.py out.jpg img… [--cols 4] [--w 480]` | contact sheet |

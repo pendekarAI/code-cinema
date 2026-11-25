@@ -93,7 +93,7 @@ Hasilnya diserahkan di folder proyek: file `.mp4`, poster, subtitle `.srt`, trea
 
 ### Sebelum mulai
 
-- Satu film butuh sekitar 30–60 menit kerja Claude dan cukup banyak token.
+- Durasi film 30 detik sampai **20 menit**. Film 1 menit butuh sekitar 30–60 menit kerja Claude; film panjang dibangun per bab, dirender per chunk yang bisa dilanjutkan, dan bisa berlanjut dalam beberapa putaran kerja serta jauh lebih banyak token.
 - Anda butuh **Node 20+**, **ffmpeg 7+**, dan **Python 3.11+** (atau [uv](https://docs.astral.sh/uv/)); Claude memasang sisanya. Ubuntu 24.04 membawa ffmpeg 6.1 yang terlalu lama: pakai static build.
 - Tiga gaya (Manga Panels, Text Flash Cuts, Comic History Cartoon; bertanda ✦ di [daftar gaya](styles/README.md)) menggambar karakternya dengan generator gambar yang Anda sediakan. Tanpa itu, ketiga gaya ini tidak bisa dimulai; gaya lain bisa jalan tanpanya.
 - Output default 1920×1080 pada 24 fps (beberapa gaya memakai frame rate sendiri); ukuran lain, misalnya vertikal 1080×1920 untuk Reels, bisa diminta.

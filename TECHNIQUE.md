@@ -70,7 +70,7 @@ Aturan yang membuatnya andal:
 - **Satu fungsi world → screen.** Setiap efek yang mengikuti subjek (iris, zoom, spotlight) melewati fungsi ini. Jangan pernah mengetik koordinat layar secara manual.
 - **Gambar untuk frame yang Anda render.** Default 1920×1080; untuk ukuran lain berikan `--size WxH` (mis. `1080x1920`) ke setiap alat render dan susun halaman dari `innerWidth` × `innerHeight`.
 
-Capture (`core/render/`):
+Capture (`core/render/`; film di atas 60 detik dirender per chunk dengan `chunks.mjs`, §13):
 
 ```sh
 node core/render/still.mjs <demo> 1.5 12 --range 0:50:2   # still untuk review; berhenti jika ada error halaman
@@ -150,6 +150,47 @@ Hanya materi CC0, CC BY, atau OFL, masing-masing dicantumkan di `CREDITS` film d
 Film yang menyatakan fakta (gaya yang dibangun dari data atau pindaian nyata: disebut di `STYLE.md`-nya) menyimpan `FACTS.md` di folder proyek: setiap klaim dengan URL sumber dan kutipan kalimatnya, atau pengukuran yang menghasilkannya.
 
 Font: Google Fonts (OFL), di-host sendiri di proyek. Typeface yang disebut `STYLE.md` tidak ada di library; unduh (`https://github.com/google/fonts/tree/main/ofl/<family>`) ke folder `fonts/` proyek. `core/fonts/` berisi beberapa font display Latin dan satu font display Mandarin dengan hanya sekitar 200 glyph, tidak cukup untuk teks Mandarin panjang. Untuk Mandarin, subset font CJK ke karakter yang Anda pakai: Google Fonts CSS API dengan `&text=` hanya mengembalikan glyph itu (`https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@700&text=<karakter yang di-URL-encode>`). Unduh file font yang ditunjuknya ke `fonts/` proyek dan muat dengan `@font-face`; jangan menautkan Google Fonts saat render.
+
+## 13. Film panjang (sampai 20 menit)
+
+Kategori durasi dan strukturnya ada di DIRECTOR.md §1. Di sini cara membangunnya supaya film 20 menit tetap rapi, deterministik, dan bisa dirender tanpa takut terputus.
+
+**Susunan kode.** Satu folder proyek, satu halaman, satu `render(t)`, tapi kodenya dipecah:
+
+```
+<proyek>/
+  timeline.js          # menggabungkan bab: SECS, SUBS, EV global; DUR dari rekaman
+  timeline/bab01.js …  # satu file per bab (film > 5 menit: per babak, berisi bab-babnya)
+  scenes/              # pustaka adegan: fungsi (ctx, t_lokal, data) untuk tiap jenis adegan
+  vo/bab01/ …          # lines.json dan WAV per bab
+```
+
+- `render(t)` mencari bab aktif dari `t` (pencarian biner pada waktu mulai bab), lalu memanggil adegan bab itu dengan waktu lokal. Tetap deterministik: tanpa state antar frame, angka acak dari seed ID elemen.
+- Setiap bab bisa diuji sendiri: `still.mjs <proyek> --range <awal>:<akhir>:2` untuk rentang bab itu, sebelum bab berikutnya ditulis. Film > 5 menit dibangun dan diuji **per babak**: selesaikan babak 1 (gambar, suara, subtitle) sebelum menulis babak 2.
+- Aset besar (font, tekstur, HDR) dimuat sekali sebelum `READY`, dan tingkat skala gambar besar di-cache sekali, bukan per frame.
+
+**Suara per bab.** Naskah di `NASKAH.md` dikelompokkan per bab; kalimat diberi ID bab (`b01_v01`, `b01_v02`, …). Rekaman user untuk film > 5 menit datang satu file per bab (`bab01.wav`, `bab02.wav`, …): periksa tiap file dengan `asr_check.py`, sambung dengan jeda ±0,7 detik, dan jadikan offset tiap file sebagai waktu mulai bab di timeline. TTS dibuat per bab dengan suara dan pengaturan yang sama persis; jangan membuat ulang satu bab dengan pengaturan lain.
+
+**Musik.** Satu cue per bab atau per babak, dari palet instrumen yang sama, dengan transisi di pergantian bab (crossfade 1–2 detik atau satu hening musik). Tulis score per babak ke stem terpisah (`music/babak1.wav`, …) lalu sambung; satu array numpy untuk 20 menit stereo 48 kHz float64 makan ±0,9 GB memori. Musik di-duck di bawah suara sepanjang film. Untuk film > 5 menit boleh 2–3 tema yang bergantian per babak.
+
+**Render: `core/render/chunks.mjs`.** Film di atas 60 detik dirender per chunk, bukan dengan `video.mjs` sekali jalan:
+
+```sh
+# render uji: chunk pertama dan satu di tengah, periksa, lalu perkirakan waktu dari frames/s yang dicetak
+node core/render/chunks.mjs "$HERE" --fps 24 --only 1,20 --out "$HERE/out/video.mp4"
+# render penuh: chunk yang sudah jadi dilewati, lalu semuanya disambung tanpa re-encode dan jumlah frame dicek
+node core/render/chunks.mjs "$HERE" --fps 24 --out "$HERE/out/video.mp4"
+# setelah mengubah adegan bab 3 (mis. chunk 7–9): render ulang chunk itu saja
+node core/render/chunks.mjs "$HERE" --fps 24 --redo 7,8,9 --out "$HERE/out/video.mp4"
+```
+
+- Chunk default 30 detik (`--chunk`), disimpan di `out/video.chunks/`. Jika proses berhenti (sesi berakhir, komputer tidur, error halaman), jalankan perintah yang sama lagi: render lanjut dari chunk yang belum ada. Pengaturan yang berubah (durasi, fps, ukuran) ditolak dengan pesan, supaya chunk lama tidak tercampur; mulai ulang dengan `--fresh`.
+- **Di sesi cloud**, proses background biasanya dihentikan beberapa menit setelah balasan selesai. Jalankan render di foreground dalam putaran berulang, `timeout 580 node core/render/chunks.mjs …`, sampai mencetak `done`; setiap putaran menyimpan chunk yang selesai. Laporkan progres per putaran ke user (chunk ke berapa dari berapa, perkiraan sisa waktu).
+- Di komputer user, `build.sh` film panjang memanggil `chunks.mjs` alih-alih `video.mjs`; sisanya sama (mix → `mux.sh`).
+- Jangan menurunkan resolusi, menaikkan CRF, atau menyederhanakan animasi di bab akhir demi mengejar waktu render. Jika waktu atau disk tidak cukup (sediakan ±2 GB untuk film 20 menit pada 1080p), laporkan dan minta keputusan.
+- Jangan menyerahkan film setengah jadi sebagai film final. Hapus `out/video.chunks/` setelah film final diperiksa.
+
+**Pemeriksaan.** `chunks.mjs` sudah mencocokkan jumlah frame setiap chunk dan film gabungannya. Selebihnya ada di DIRECTOR.md §11: loudness per bab (`ffmpeg -af ebur128` pada potongan per bab), sinkron di setiap awal bab, contact sheet per babak, `blackdetect` dan `freezedetect`.
 
 ## 12. Di mana mencari di demo kami
 
