@@ -155,6 +155,7 @@ Render 6–9 shot kunci dengan kode gambar yang sebenarnya, disusun dalam satu l
 - `<nama>.mp4` (24 fps kecuali `STYLE.md` menetapkan lain, sekitar −14 LUFS) dan `poster.jpg`;
 - `<nama>.srt`, jika film punya narasi, dialog, atau subtitle; jika subtitle di-burn ke gambar, gunakan nama `subtitles_<bahasa>.srt` (pemutar desktop memuat `.srt` yang bernama sama dengan video di atas gambar, sehingga setiap baris akan muncul dua kali);
 - `TREATMENT.md`;
+- `NASKAH.md` dan `NASKAH.txt` (naskah final yang sesuai dengan suara di film);
 - `CREDITS`: setiap aset pihak ketiga di film (pustaka sampel, musik, font, gambar, mesin suara) dengan sumber dan lisensinya (TECHNIQUE.md §11);
 - source-nya, dengan `build.sh` satu perintah (TECHNIQUE.md §2);
 - film di atas 60 detik: `CHAPTERS.txt`, daftar bab bertimestamp (`00:00 Judul bab`, dikelompokkan per babak untuk film di atas 5 menit, per bagian dan babak untuk Layar Lebar; `1:02:03` di atas satu jam) yang bisa langsung ditempel sebagai chapter YouTube, dan juga ditulis di pesan penyerahan;

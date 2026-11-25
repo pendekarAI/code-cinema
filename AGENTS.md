@@ -75,13 +75,41 @@ Mascot Screencast tidak disertai demo: maskotnya harus karakter piksel orisinal 
       - **"Gaya naskah"**: Edukatif (rekomendasi untuk materi belajar: jelas, runtut, ramah pemula) · Formal / profesional · Santai / gaul · Storytelling (bercerita dengan tokoh dan konflik). Tool menambahkan Other untuk gaya lain (humor, inspiratif, jualan, dan sebagainya).
       - **"Voice over"**: Rekam suara sendiri (rekomendasi: Anda menulis naskah, user merekam) · Suara AI perempuan atau laki-laki · Tanpa voice over (naskah tampil sebagai teks di layar + musik).
       - **Uji suara AI dulu** sebelum bertanya: pasang tingkat voice bila belum (`… setup.sh deps voice`), lalu `"$LIB/.venv/bin/python" -m edge_tts --text "uji suara" --voice id-ID-GadisNeural --write-media /tmp/vo_test.mp3`. Uji berhasil hanya jika file mp3 itu terbentuk dan tidak kosong. Untuk bahasa lain pakai suara bahasa itu (`python -m edge_tts --list-voices`). Tawarkan suara AI (`id-ID-GadisNeural` perempuan, `id-ID-ArdiNeural` laki-laki) hanya jika uji berhasil; jika gagal (mis. sesi cloud memblokir layanan suara), sebutkan dalam satu kalimat dan ganti opsinya dengan: **suara AI dibuat ulang lewat `build.sh` di komputer user**.
-   2. **Tulis naskah** sesuai gaya naskah, topik, bahasa, dan durasi, lalu simpan sebagai `NASKAH.md` dan `vo/lines.json` di folder proyek:
+   2. **Tulis naskah** sesuai gaya naskah, topik, bahasa, dan durasi, lalu simpan sebagai `NASKAH.md`, `NASKAH.txt`, dan `vo/lines.json` di folder proyek:
       - kalimat pendek bernomor (v1, v2, …), satu gagasan per kalimat; hook di kalimat pertama; penutup yang menggema pembuka;
       - target jumlah kata ≈ durasi (detik) × 2,3 untuk bahasa Indonesia (2,1 untuk gaya santai atau storytelling; sisakan margin 5–8% untuk jeda dan keheningan musik); cantumkan perkiraan detik per kalimat dan totalnya;
       - di atas 60 detik, susun naskah per bab sesuai kategori durasi (DIRECTOR.md §1): `[Hook]`, `[Peta isi]`, `[Bab N — Judul]`, `[Ringkasan]`, `[Penutup]`; di atas 5 menit kelompokkan bab ke dalam babak, dengan rekap mini di akhir tiap babak, dan beri ID kalimat per bab (`b01_v01`, …); untuk Layar Lebar, bagi dulu ke dalam bagian (≤ 20 menit, dipotong di titik alami) dan beri ID dengan awalan bagian (`p1_b01_v01`, …); naskah bagian 2 dan seterusnya boleh ditulis lengkap setelah bagian 1 disetujui, tapi kerangka seluruh film disetujui di awal;
-      - di `lines.json`, angka ditulis seperti diucapkan di field `say` ("empat puluh") dan sebagai digit di `text` (subtitle); tandai istilah asing beserta cara bacanya di `NASKAH.md`.
+      - di `lines.json`, angka ditulis seperti diucapkan di field `say` ("empat puluh") dan sebagai digit di `text` (subtitle); tandai istilah asing beserta cara bacanya di `NASKAH.md`;
+      - tulis juga **`NASKAH.txt`**, file teks polos untuk dibaca saat merekam atau ditempel ke teleprompter / aplikasi TTS, UTF-8, tanpa markdown:
+        ```
+        JUDUL FILM
+        Gaya naskah: … · Target durasi: ± … · Total: … kata (± … detik)
+
+        === NASKAH UTUH ===
+        [Hook]
+        <kalimat-kalimat bagian ini disambung menjadi satu paragraf>
+
+        [Bab 1 — Judul]
+        <paragraf>
+        …
+
+        === KALIMAT BERNOMOR (untuk rekaman per kalimat) ===
+        v1  <kalimat>
+        v2  <kalimat>
+        …
+
+        === CARA BACA ISTILAH ===
+        data science: dé-ta sai-ens
+        …
+
+        === PANDUAN REKAM ===
+        <panduan rekam langkah 1.3, ringkas>
+        ```
+        Teks naskah utuh memakai kalimat yang diucapkan (field `say`, angka ditulis dengan huruf), tanpa nomor dan tanpa perkiraan detik, supaya bisa langsung dibaca atau ditempel. Bagian kalimat bernomor hanya diisi jika user merekam sendiri atau film di atas 60 detik; bagian cara baca hanya jika ada istilah asing. Setiap kali naskah direvisi, perbarui `NASKAH.md`, `NASKAH.txt`, dan `vo/lines.json` bersama-sama;
    3. **Kirim naskah dalam satu pesan, bersama pertanyaan brief langkah 2** (supaya tidak menambah putaran):
       - naskah lengkap di chat sebagai tabel: no, kalimat, perkiraan detik; untuk film di atas 3 menit, di chat cukup tabel per bab (judul, jumlah kata, perkiraan detik) dan kirim `NASKAH.md` lengkap sebagai file;
+      - **di bawah tabel, blok "Naskah siap salin"**: satu blok kode berisi naskah utuh yang sama dengan bagian NASKAH UTUH di `NASKAH.txt` (paragraf per bagian, label bagian di baris sendiri, tanpa nomor dan detik), supaya user tinggal menyalinnya dengan tombol copy. Untuk film di atas 3 menit, blok ini cukup berisi Hook dan Bab 1 sebagai contoh, dan naskah utuh ada di file;
+      - **sertakan `NASKAH.txt` sebagai file yang bisa diunduh**: di sesi cloud kirim dengan `SendUserFile` (bersama `NASKAH.md` untuk film di atas 3 menit); di komputer user sebutkan path lengkapnya di folder proyek. Setelah revisi, kirim versi terbaru lagi;
       - jika user merekam sendiri, sertakan panduan rekam: satu file utuh dengan jeda ±1 detik antar kalimat, atau satu file per kalimat bernama `v1`, `v2`, …; format WAV, MP3, atau M4A; ruang hening, jarak mulut 15–20 cm, tanpa musik latar; boleh sedikit improvisasi karena timing film mengikuti rekaman; untuk film di atas 5 menit, satu file per bab bernomor dua digit (`bab01`, `bab02`, …), dengan ruangan dan jarak mikrofon yang sama untuk semua bab; untuk Layar Lebar dengan awalan bagian (`p1_bab01`, …, `p2_bab01`, …), dan rekaman bagian 1 boleh dikirim lebih dulu;
       - minta user menyetujui naskah atau menyebut revisinya.
    4. **Tunggu persetujuan naskah** dan revisi bila diminta. Lalu:
