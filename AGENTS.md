@@ -42,7 +42,7 @@ Jika user belum memilih gaya:
 - Sarankan dua atau tiga yang cocok dengan topik mereka.
 - Jika mereka punya gaya sendiri, cantumkan lebih dulu, di bawah judul "Gaya saya" (dalam bahasa mereka).
 - Tampilkan daftar lengkap di bawah ini di chat. Nama gaya tetap dalam bahasa Inggris; nama kategori dalam bahasa user. Jangan menghapus, menggabungkan, atau mengganti nama apa pun.
-- Sebutkan bahwa deskripsi singkat dan contoh penggunaan setiap gaya ada di `styles/README.md`, dan `style.json` setiap gaya memuat jenis film yang cocok (`uses`).
+- Tautkan galeri, tempat setiap gaya punya gambar pratinjau: https://github.com/pendekarAI/code-cinema/blob/main/GALERI.md (contoh penggunaan setiap gaya juga ada di `styles/README.md`).
 - Lalu minta mereka mengetik namanya. Daftar ditaruh di pesan Anda sendiri (output perintah tidak terlihat oleh mereka), dan pertanyaannya teks biasa, bukan `AskUserQuestion`: opsinya yang sedikit akan menyembunyikan sisa daftar.
 
 Semua 99 gaya:

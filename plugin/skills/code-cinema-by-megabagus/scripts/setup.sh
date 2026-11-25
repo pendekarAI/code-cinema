@@ -18,13 +18,13 @@ else LIB=$HOME/code-cinema
 fi
 case "$LIB" in /*|[A-Za-z]:[/\\]*) ;; *) LIB=$(pwd)/$LIB ;; esac   # C:/… is absolute too (Windows git prints paths that way)
 
-# Our clone skips demo sources; what `setup.sh demo` added stays.
+# Our clone skips demo sources and the gallery thumbnails (docs/); what `setup.sh demo` added stays.
 # git < 2.35 has no --no-cone: then the whole library is checked out.
 # The patterns reach git as written: Git Bash on Windows would turn '/styles/' into 'C:/Program Files/Git/styles/'.
 # It runs from inside $LIB, because a -C /c/… path needs that rewriting.
 sparse() { (cd "$LIB" && MSYS_NO_PATHCONV=1 git sparse-checkout "$@"); }
 apply_sparse() {
-  set -- '/*' '!/styles/*/demo/' \
+  set -- '/*' '!/styles/*/demo/' '!/docs/' \
     $(git -C "$LIB" sparse-checkout list 2>/dev/null | grep -E '^/styles/[^/*]+/demo/$' || true)
   sparse set --no-cone "$@" 2>/dev/null || git -C "$LIB" sparse-checkout disable || true
 }
