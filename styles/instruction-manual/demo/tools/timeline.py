@@ -4,7 +4,7 @@ Reads vo/dur.json and vo/words.json (tts.py / asr_check.py), places every narrat
 (pushed later if the subtitle before it is still on screen), and writes:
   timeline.json   {dur, vo: {id: [t0, t1]}, words: {id: [[word, t0, t1], …] absolute}, subs: [{t0, t1, en, zh}]}
   ../../instruction-manual.srt   one Chinese line, one English line per cue
-Rules (MAINTAINING.md, library demos): one line per language per cue, each cue ≥ 1.8 s and ≥ its spoken words + 0.6 s.
+Rules for library demos: one line per language per cue, each cue ≥ 1.8 s and ≥ its spoken words + 0.6 s.
 Run from anywhere: python3 styles/instruction-manual/demo/tools/timeline.py
 """
 import json, os
