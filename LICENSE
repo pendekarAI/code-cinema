@@ -1,0 +1,118 @@
+Code Cinema by Megabagus
+https://github.com/pendekarAI/code-cinema
+
+RINGKASAN (Bahasa Indonesia, tidak mengikat; teks yang mengikat ada di bawah)
+
+- Kode (core/, tools/, plugin/, kode demo): MIT. Bebas dipakai, diubah, dan
+  dibagikan, termasuk untuk komersial, asal notice hak cipta di file ini ikut.
+- Panduan dan prompt gaya (semua file .md): CC BY-NC 4.0. Bebas dipakai,
+  diubah, dan dibagikan secara non-komersial dengan mencantumkan kredit.
+  Untuk membuat film sendiri, termasuk film komersial dan film klien, ada izin
+  tambahan (lihat bagian 3).
+- Still dan subtitle film demo: CC BY 4.0.
+- Terjemahan, branding Code Cinema, dan alur kerja berbahasa Indonesia:
+  (c) 2026 Mega Bagus Herlambang, dengan lisensi yang sama (MIT untuk kode,
+  CC BY-NC 4.0 untuk teks).
+- Film yang Anda buat dengan alat ini sepenuhnya milik Anda, termasuk untuk
+  komersial, tanpa kewajiban kredit.
+- Materi pihak ketiga (font, musik, sampel, footage, foto, data, peta) tetap
+  memakai lisensinya masing-masing, seperti tercantum di CREDITS setiap demo.
+
+
+1. ORIGIN AND COPYRIGHT
+
+Code Cinema is a modified, Indonesian-language edition of the Lemo-Opuscar
+library (https://github.com/lemomo-ai/lemo-opuscar), created by Lemomo.
+
+  Original work: Copyright (c) 2026 SecondFirst Pty Ltd, trading as LemoLab.
+  Changes and additions: Copyright (c) 2026 Mega Bagus Herlambang (megabagus,
+  https://github.com/pendekarAI).
+
+Changes made by Mega Bagus Herlambang: the project, skill, paths, variables
+and on-screen sign-offs were renamed; the main guides (README.md, AGENTS.md,
+DIRECTOR.md, TECHNIQUE.md, MY-STYLES.md, styles/README.md and the skill) were
+translated into Indonesian and adapted; maintainer-only tools, the gallery
+site, posters, two stills and one demo (Mascot Screencast) were removed; the
+large asset packs are re-hosted on this repository's "assets" release.
+
+The full licence texts are in LICENSES/. The first rule below that matches a
+file decides its licence.
+
+
+2. WHICH LICENCE APPLIES
+
+2.1 Third-party material keeps its own licence or terms: fonts and their
+    licence texts, music, sound recordings and sample libraries, models and
+    textures, data, maps, footage, photographs, and the code libraries bundled
+    with some demos. Each demo's CREDITS (styles/<slug>/demo/CREDITS) names the
+    material, its source and its licence. See also
+    LICENSES/LicenseRef-PublicDomain.txt, LICENSES/LicenseRef-IBTrACS.txt and
+    LICENSES/LicenseRef-ThirdPartyMarks.txt.
+
+2.2 Docs: Creative Commons Attribution-NonCommercial 4.0 International
+    (CC BY-NC 4.0, LICENSES/CC-BY-NC-4.0.txt,
+    https://creativecommons.org/licenses/by-nc/4.0/).
+    - Every Markdown file (*.md): the guides, each style's STYLE.md and
+      DEMO.md, the READMEs and the skill's SKILL.md, in their original and in
+      their translated or adapted form.
+    - The image-generation prompts: everything under styles/*/demo/prompts/,
+      styles/manga-panels/demo/tools/style_suffix.txt and
+      styles/comic-history/demo/tools/sheets.json.
+
+2.3 Demo stills and subtitles: Creative Commons Attribution 4.0 International
+    (CC BY 4.0, LICENSES/CC-BY-4.0.txt,
+    https://creativecommons.org/licenses/by/4.0/).
+    - styles/*/demo/stills/ and styles/*/*.srt. Third-party material shown in
+      them keeps its own licence (2.1).
+
+2.4 Code: MIT License (LICENSES/MIT.txt). Everything else: the code in core/,
+    tools/ and plugin/ and each demo's code, with the data, configuration,
+    CREDITS and small assets they use. The MIT notice for this material is:
+
+      Copyright (c) 2026 SecondFirst Pty Ltd, trading as LemoLab
+      Copyright (c) 2026 Mega Bagus Herlambang
+
+    Where the MIT text speaks of "this software and associated documentation
+    files", it means the material under this rule only, not the docs of 2.2.
+
+Two styles were contributed to the original library from outside and are
+included with their authors' permission: Memphis Diorama by EianLu
+(styles/memphis-diorama/) and Crayon World 3D by 2nd1st (styles/crayon-world/).
+
+Third-party product names, interfaces, logos and trademarks that appear in the
+demos belong to their owners and are not licensed here.
+
+
+3. FILMS YOU MAKE, AND ADDITIONAL PERMISSION FOR THE DOCS
+
+Films you make with the library are yours, commercial films included, and need
+no credit; third-party material you use in them keeps its own terms.
+
+The original licensor grants, in addition to CC BY-NC 4.0, a worldwide,
+royalty-free, non-exclusive, irrevocable permission to you and the people
+working with you on a film (staff, contractors, the client) to read, follow,
+copy and adapt the docs to make your own films (commercial and client films
+included), and to include them, or versions you adapted, in the project files
+you deliver for that film. A style you change and keep as your own to make
+your films (MY-STYLES.md) is covered. Mega Bagus Herlambang grants the same
+permission for his translations and additions. This permission does not cover
+sharing the docs or adapted versions with others beyond those people and those
+project files, or selling them: CC BY-NC 4.0 governs those. Any other
+commercial use of the original docs (for example selling them, or putting them
+into a product or service run for commercial advantage) needs a commercial
+licence from the original licensor.
+
+
+4. HOW TO CREDIT
+
+When you share this library or parts of it:
+
+  "Code Cinema by Mega Bagus Herlambang, based on Lemo-Opuscar by Lemomo
+  (LemoLab)", with a link to https://github.com/pendekarAI/code-cinema, the
+  name of the licence with a link to it (CC BY-NC 4.0 for the docs, CC BY 4.0
+  for the stills and subtitles, MIT for the code), and say if you changed it.
+
+For the two contributed styles, name their author too: "Memphis Diorama by
+EianLu" and "Crayon World 3D by 2nd1st".
+
+Third-party material is credited as its CREDITS says.

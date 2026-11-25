@@ -1,0 +1,9 @@
+Third-party product interfaces, names, logos and trademarks
+
+Some demo films in styles/*/demo/ name or redraw third-party products, companies
+or services (for example AI model and company names in the Rhythm Game Show and
+Broadcast News Package demos). These names, interfaces, logos and trademarks
+belong to their owners. They are excluded from every licence in this repository,
+and no licence is given here for them. Anyone reusing them needs their owners'
+permission or another legal basis, even when they stay inside a complete picture
+or film.

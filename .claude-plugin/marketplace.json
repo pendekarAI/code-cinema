@@ -1,0 +1,17 @@
+{
+  "name": "megabagus",
+  "owner": {
+    "name": "Mega Bagus Herlambang (megabagus)",
+    "url": "https://github.com/pendekarAI"
+  },
+  "metadata": {
+    "description": "Skill Claude dari megabagus: Code Cinema, film pendek yang dibuat sepenuhnya dengan kode."
+  },
+  "plugins": [
+    {
+      "name": "code-cinema-by-megabagus",
+      "source": "./plugin",
+      "description": "Buat film dengan salah satu dari 99 gaya film berbasis kode: Claude menyutradarai, menggambar, membuat musik, dan me-mixing-nya."
+    }
+  ]
+}

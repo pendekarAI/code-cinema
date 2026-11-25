@@ -1,0 +1,8 @@
+{
+  "name": "code-cinema-by-megabagus",
+  "description": "Buat film dengan salah satu dari 99 gaya film berbasis kode: Claude menyutradarai, menggambar, membuat musik, dan me-mixing-nya.",
+  "author": { "name": "Mega Bagus Herlambang (megabagus)", "url": "https://github.com/pendekarAI" },
+  "homepage": "https://github.com/pendekarAI/code-cinema",
+  "repository": "https://github.com/pendekarAI/code-cinema",
+  "license": "MIT AND CC-BY-NC-4.0"
+}

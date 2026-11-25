@@ -1,0 +1,23 @@
+{
+ "slug": "living-screencast",
+ "num": "68",
+ "en": "Mascot Screencast",
+ "cn": "像素小人录屏",
+ "aka": [
+  "Living Screencast",
+  "活体实机录屏"
+ ],
+ "category_en": "Screens & Interfaces",
+ "category_cn": "屏幕界面",
+ "film": "(no bundled demo)",
+ "film_cn": "（无示例影片）",
+ "line": "An original pixel mascot hops out of the terminal into an app and acts out its features in one take.",
+ "line_cn": "原创像素小人跳出终端进入应用，一镜到底演示功能。",
+ "uses": [
+  "Product tutorials",
+  "Feature launches",
+  "Onboarding"
+ ],
+ "frame_sec": 5.94,
+ "dur": 59.4
+}
