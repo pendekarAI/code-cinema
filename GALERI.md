@@ -23,7 +23,7 @@ Gaya bertanda ✦ menggambar karakternya dengan generator gambar yang Anda sedia
 </tr>
 <tr>
 <td width="33%" valign="top"><a href="styles/telestrator/STYLE.md"><img src="docs/galeri/telestrator.jpg" width="100%" alt="Sports Telestrator"></a><br><b>Sports Telestrator</b><br><sub><code>telestrator</code> · Analisis olahraga, Rekap pertandingan, Coaching</sub></td>
-<td width="33%" valign="top"><a href="styles/news-package/STYLE.md"><i>Pratinjau menyusul</i></a><br><b>Broadcast News Package</b><br><sub><code>news-package</code> · Rangkuman berita, Buletin, Update pasar</sub></td>
+<td width="33%" valign="top"><a href="styles/news-package/STYLE.md"><img src="docs/galeri/news-package.jpg" width="100%" alt="Broadcast News Package"></a><br><b>Broadcast News Package</b><br><sub><code>news-package</code> · Rangkuman berita, Buletin, Update pasar</sub></td>
 </tr>
 </table>
 
@@ -201,7 +201,7 @@ Gaya bertanda ✦ menggambar karakternya dengan generator gambar yang Anda sedia
 <table>
 <tr>
 <td width="33%" valign="top"><a href="styles/dark-keynote/STYLE.md"><img src="docs/galeri/dark-keynote.jpg" width="100%" alt="Dark Tech Keynote"></a><br><b>Dark Tech Keynote</b><br><sub><code>dark-keynote</code> · Peluncuran produk, SaaS, Keynote</sub></td>
-<td width="33%" valign="top"><a href="styles/living-screencast/STYLE.md"><i>Pratinjau menyusul</i></a><br><b>Mascot Screencast</b><br><sub><code>living-screencast</code> · Tutorial produk, Peluncuran fitur, Onboarding</sub></td>
+<td width="33%" valign="top"><a href="styles/living-screencast/STYLE.md"><img src="docs/galeri/living-screencast.jpg" width="100%" alt="Mascot Screencast"></a><br><b>Mascot Screencast</b><br><sub><code>living-screencast</code> · Tutorial produk, Peluncuran fitur, Onboarding</sub></td>
 <td width="33%" valign="top"><a href="styles/hologram-hud/STYLE.md"><img src="docs/galeri/hologram-hud.jpg" width="100%" alt="Sci-fi Hologram HUD"></a><br><b>Sci-fi Hologram HUD</b><br><sub><code>hologram-hud</code> · Penelusuran spesifikasi, Video peluncuran, Pameran dagang</sub></td>
 </tr>
 <tr>
@@ -255,7 +255,7 @@ Gaya bertanda ✦ menggambar karakternya dengan generator gambar yang Anda sedia
 <table>
 <tr>
 <td width="33%" valign="top"><a href="styles/satellite-briefing/STYLE.md"><img src="docs/galeri/satellite-briefing.jpg" width="100%" alt="Satellite Briefing"></a><br><b>Satellite Briefing</b><br><sub><code>satellite-briefing</code> · Iklim, Penjelasan berita, Geografi</sub></td>
-<td width="33%" valign="top"><a href="styles/briefing-board/STYLE.md"><i>Pratinjau menyusul</i></a><br><b>Engineering Briefing Board</b><br><sub><code>briefing-board</code> · Teknik, Perbandingan pilihan, Briefing</sub></td>
+<td width="33%" valign="top"><a href="styles/briefing-board/STYLE.md"><img src="docs/galeri/briefing-board.jpg" width="100%" alt="Engineering Briefing Board"></a><br><b>Engineering Briefing Board</b><br><sub><code>briefing-board</code> · Teknik, Perbandingan pilihan, Briefing</sub></td>
 <td width="33%" valign="top"><a href="styles/lidar-survey/STYLE.md"><img src="docs/galeri/lidar-survey.jpg" width="100%" alt="LiDAR Survey"></a><br><b>LiDAR Survey</b><br><sub><code>lidar-survey</code> · Warisan budaya, Lingkungan, Survei lokasi</sub></td>
 </tr>
 <tr>
@@ -286,4 +286,4 @@ Gaya bertanda ✦ menggambar karakternya dengan generator gambar yang Anda sedia
 </tr>
 </table>
 
-<sub>Still demo berlisensi CC BY 4.0; lihat [LICENSE](LICENSE).</sub>
+<sub>Still demo berlisensi CC BY 4.0; lihat [LICENSE](LICENSE). Pratinjau Mascot Screencast adalah style frame orisinal (maskot piksel dan aplikasi fiktif), karena gaya ini tidak disertai film demo.</sub>

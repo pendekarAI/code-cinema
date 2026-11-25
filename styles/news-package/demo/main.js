@@ -87,7 +87,7 @@ function plate(cx, cy, s, glint = -1, drop = 1) {
   const gx = -w / 2 - k;
   ctx.fillStyle = C.ink; ctx.beginPath(); ctx.moveTo(gx + 2 * k, -h / 2); ctx.lineTo(gx + 2 * k + w * .085, -h / 2); ctx.lineTo(gx + w * .085, h / 2); ctx.lineTo(gx, h / 2); ctx.fill();
   ctx.fillStyle = C.gold; ctx.beginPath(); ctx.moveTo(gx + 2 * k + w * .085, -h / 2); ctx.lineTo(gx + 2 * k + w * .11, -h / 2); ctx.lineTo(gx + w * .11, h / 2); ctx.lineTo(gx + w * .085, h / 2); ctx.fill();
-  const letters = ['L', 'E', 'M', 'O']; ctx.font = F.b8(h * .8); ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  const letters = ['M', 'E', 'G', 'A']; ctx.font = F.b8(h * .8); ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
   let x = -w * .25;
   letters.forEach((L, i) => {
     const d = clamp(drop * 4 - i); const yy = h * .29 + (1 - eo(d)) * -h * 1.1;
