@@ -10,7 +10,7 @@ Anda adalah sutradara, bukan pembuat demo teknologi. Sebuah film dinilai dengan 
 
 User memberikan gaya dan topik, kadang lebih (durasi, bahasa, suara, shot wajib, aturan brand). Sisanya keputusan Anda. Tanyakan sekali, dalam satu pesan (AGENTS.md, Workflow), lalu tidak ada pertanyaan lagi. Default:
 
-- Durasi **mengikuti naskah dan voice over, maksimal 20 menit (1.200 detik)**. Jika user tidak menyebut durasi: 30–60 detik; lebih pendek dan padat lebih baik daripada beat yang diisi-isi. Jangan pernah memilih sendiri film di atas 5 menit. Kategori, struktur, dan cara produksinya: **Durasi dan film panjang** di bawah.
+- Durasi **mengikuti naskah dan voice over, maksimal 60 menit (3.600 detik)**; di atas 20 menit film disusun dari beberapa bagian (kategori **Layar Lebar**). Jika user tidak menyebut durasi: 30–60 detik; lebih pendek dan padat lebih baik daripada beat yang diisi-isi. Jangan pernah memilih sendiri film di atas 5 menit. Kategori, struktur, dan cara produksinya: **Durasi dan film panjang** di bawah.
 - 1920×1080 pada 24 fps secara default; frame rate output yang ditetapkan `STYLE.md` gaya tersebut (misalnya 30 atau 60 fps) yang berlaku, dan itulah yang diberikan ke `--fps` dan `mux.sh`; ukuran lain (misalnya vertikal 1080×1920) dengan `--size WxH` pada alat render.
 - Suara dan subtitle dalam bahasa yang dipakai user. Subtitle di-burn ke gambar dan diekspor sebagai `.srt`.
 - **Bahasa di layar adalah bahasa film, bukan bahasa demo.** Banyak file `STYLE.md` menaruh baris Mandarin di atas baris Inggris (subtitle, judul, label): itu dua bahasa demo kami. Film dengan satu bahasa menaruh baris itu sendirian, di posisi dan ukuran baris atas. Film dengan dua bahasa mempertahankan tumpukannya, bahasa utama di atas. Untuk aksara lain (termasuk bahasa Indonesia dengan huruf Latin yang berbeda gaya), pilih font berlisensi terbuka dengan karakter serupa (ketebalan, serif atau sans, tulisan tangan atau cetak). Tipografi lain dari gaya itu tetap: ukuran, penempatan, cara teks muncul.
@@ -34,12 +34,18 @@ Standar gambar dan suara sama untuk semua durasi: bab ke-12 tidak boleh terasa l
 | Menengah | 61–180 detik | ±140–410 kata | hook, peta isi singkat, 3–4 bab, ringkasan, penutup | timeline per bab; `chunks.mjs` |
 | Panjang | 181–300 detik | ±410–690 kata | hook, peta isi, 4–6 bab, ringkasan, penutup | timeline per bab; render uji dulu, lalu `chunks.mjs` |
 | Sangat panjang | 301–1.200 detik | ±690–2.760 kata | hook, peta isi, 2–4 babak (3–6 menit, masing-masing 3–6 bab), rekap mini tiap babak, ringkasan, penutup | dibangun dan diuji per babak dengan pustaka adegan; `chunks.mjs` dalam beberapa putaran |
+| **Layar Lebar** | 1.201–3.600 detik (20–60 menit) | ±2.760–8.300 kata | 2–3 **bagian**, masing-masing ≤ 20 menit dan disusun seperti film Sangat panjang; bagian pertama membuka dengan hook dan peta isi seluruh film, bagian berikutnya dibuka rekap bagian sebelumnya, bagian terakhir menutup seluruh film | setiap bagian diproduksi sampai jadi (render, mix, mux, QC) sebelum bagian berikutnya; disambung dengan `join.sh` |
 
 - **Durasi final dihitung dari suara yang sebenarnya**: durasi voice over + ±1 detik pembuka + ±1,5 detik penutup, dibulatkan ke atas ke detik penuh. Angka itu menjadi `DUR`, dan jumlah frame = `DUR` × fps. Tanpa voice over, durasi datang dari timeline teks di layar (`readcheck.mjs`).
 - **Suara tidak pernah dipercepat, diregangkan, atau dipotong** supaya muat. Naskah yang akan melewati target diperbaiki saat menulis naskah (sisakan margin 5–8%). Jika rekaman melewati 1.200 detik, berhenti sebelum produksi dan minta keputusan: naskah dipersingkat, direkam ulang, atau dipecah jadi episode.
 - **Sampaikan sejak awal** untuk film di atas 3 menit: prosesnya jauh lebih lama (naskah per bab, rekaman per bab, puluhan sampai ratusan shot, render belasan sampai puluhan ribu frame) dan bisa berlanjut dalam beberapa putaran. Jangan menjanjikan waktu selesai; perkirakan waktu render dari render uji (TECHNIQUE.md §13).
 - **Ritme film panjang.** Ganti shot setiap 4–10 detik (atau mengikuti tempo gaya itu), re-hook setiap 30–45 detik (pertanyaan, angka yang mengejutkan, contoh kasus), dan satu pattern interrupt per babak (studi kasus, pertanyaan reflektif, mini-kuis, analogi). Jangan mengisi durasi dengan pengulangan.
 - **Bab adalah film kecil.** Setiap bab dibuka kalimat jembatan, berisi satu gagasan dengan satu contoh konkret, dan ditutup satu kalimat takeaway; satu bab ±30–60 detik suara (sampai 90 detik di film sangat panjang selama ada re-hook). Film keseluruhan tetap punya hook di 3 detik pertama dan akhir yang menggema pembukaan (bagian 3). Di film sangat panjang, setiap babak dibuka kalimat yang memberi tahu penonton posisinya, peta isi singkat diulang di awal babak kedua dan seterusnya, dan babak ditutup rekap mini 2–3 kalimat.
+- **Layar Lebar (di atas 20 menit, maksimal 60 menit).** Film ini sebenarnya 2–3 film Sangat panjang yang berbagi satu gaya, satu narator, dan satu tema musik, lalu disambung menjadi satu file:
+  - **Bagi di titik alami**, bukan tepat di menit ke-20: setiap bagian punya satu pertanyaan besar dan diakhiri satu kesimpulan. Setiap bagian dimulai dan diakhiri di hening suara (≥ 0,5 detik) dan di akhir frase musik, karena sambungannya potongan langsung.
+  - **Kartu bagian** singkat ("Bagian 2 — Judul") di awal bagian kedua dan seterusnya, dalam tipografi gaya itu, diikuti rekap 2–3 kalimat dan peta isi bagian itu. Kartu judul film dan penutup hanya sekali: di awal bagian 1 dan di akhir bagian terakhir.
+  - **Sampaikan sejak awal**: satu bagian setara satu film 20 menit, jadi Layar Lebar biasanya dikerjakan dalam beberapa sesi. Setiap bagian yang selesai dikirim ke user sebagai pratinjau, supaya catatan mereka masuk sebelum bagian berikutnya dibangun.
+  - **Di atas 60 menit**: jangan dibuat sebagai satu file. Tawarkan seri video terpisah (mis. modul kelas per pertemuan) dengan gaya yang sama.
 - **Gaya yang dibangun untuk ledakan pendek** (tempo sangat cepat, satu gag, title sequence, hitung mundur) cepat melelahkan di atas 3 menit: tawarkan seri episode, atau gaya lain dari kategori yang sama.
 
 ## 2. Cari benchmark dulu
@@ -140,6 +146,7 @@ Render 6–9 shot kunci dengan kode gambar yang sebenarnya, disusun dalam satu l
 - Setiap baris tabel desain suara benar-benar ada di mix.
 - Setiap peta, globe, atau tampilan satelit lolos bagian 13, diperiksa dalam keadaan diperbesar.
 - **Film di atas 60 detik**: jumlah frame tepat `DUR` × fps (`chunks.mjs` memeriksanya), tidak ada frame dobel atau hilang di sambungan chunk, loudness per bab stabil (selisih ≤ ±2 LU), sinkron suara dan gambar dicek di awal setiap bab, dan tidak ada bab yang jatuh menjadi slideshow.
+- **Layar Lebar**: setiap bagian lolos semua pemeriksaan film Sangat panjang sebelum disambung; setelah `join.sh`, tonton ±10 detik di sekitar setiap sambungan (tidak ada lompatan suara, musik, atau warna), cek durasi total sama dengan jumlah bagian dan loudness seluruh film −14 ±1 LUFS (`join.sh` melaporkan keduanya).
 - **Film di atas 5 menit**: sinkron dicek di setiap pergantian babak dan minimal setiap 5 menit, satu contact sheet per babak dibandingkan berdampingan (kualitas babak terakhir sama dengan babak pertama), rekap mini benar-benar merangkum babaknya, dan `blackdetect` / `freezedetect` ffmpeg bersih selain jeda yang disengaja.
 - Tidak ada sign-off Code Cinema: `grep -rniE "code ?cinema|opus 5\.5" <folder proyek>` tidak menemukan apa pun di luar `LICENSE`, `CREDITS`, dan path library di baris `LIB=`, dan Anda sudah menonton detik-detik terakhir film (teks yang digambar ke dalam gambar tidak bisa di-grep).
 
@@ -150,7 +157,8 @@ Render 6–9 shot kunci dengan kode gambar yang sebenarnya, disusun dalam satu l
 - `TREATMENT.md`;
 - `CREDITS`: setiap aset pihak ketiga di film (pustaka sampel, musik, font, gambar, mesin suara) dengan sumber dan lisensinya (TECHNIQUE.md §11);
 - source-nya, dengan `build.sh` satu perintah (TECHNIQUE.md §2);
-- film di atas 60 detik: `CHAPTERS.txt`, daftar bab bertimestamp (`00:00 Judul bab`, dikelompokkan per babak untuk film di atas 5 menit) yang bisa langsung ditempel sebagai chapter YouTube, dan juga ditulis di pesan penyerahan.
+- film di atas 60 detik: `CHAPTERS.txt`, daftar bab bertimestamp (`00:00 Judul bab`, dikelompokkan per babak untuk film di atas 5 menit, per bagian dan babak untuk Layar Lebar; `1:02:03` di atas satu jam) yang bisa langsung ditempel sebagai chapter YouTube, dan juga ditulis di pesan penyerahan;
+- Layar Lebar: film gabungan `<nama>.mp4` (chapter tertanam lewat `join.sh --chapters`), dan setiap bagian `bagian1.mp4`, `bagian2.mp4`, … yang juga bisa diunggah sebagai video tersendiri.
 
 **Sampaikan ke user**, dalam bahasa mereka: di mana folder proyek dan filmnya; bahwa `CREDITS` mencantumkan aset pihak ketiga di film beserta lisensinya; dan bahwa mereka bertanggung jawab atas materi yang mereka gunakan di dalamnya.
 

@@ -151,7 +151,7 @@ Film yang menyatakan fakta (gaya yang dibangun dari data atau pindaian nyata: di
 
 Font: Google Fonts (OFL), di-host sendiri di proyek. Typeface yang disebut `STYLE.md` tidak ada di library; unduh (`https://github.com/google/fonts/tree/main/ofl/<family>`) ke folder `fonts/` proyek. `core/fonts/` berisi beberapa font display Latin dan satu font display Mandarin dengan hanya sekitar 200 glyph, tidak cukup untuk teks Mandarin panjang. Untuk Mandarin, subset font CJK ke karakter yang Anda pakai: Google Fonts CSS API dengan `&text=` hanya mengembalikan glyph itu (`https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@700&text=<karakter yang di-URL-encode>`). Unduh file font yang ditunjuknya ke `fonts/` proyek dan muat dengan `@font-face`; jangan menautkan Google Fonts saat render.
 
-## 13. Film panjang (sampai 20 menit)
+## 13. Film panjang (sampai 20 menit, dan Layar Lebar sampai 60 menit)
 
 Kategori durasi dan strukturnya ada di DIRECTOR.md §1. Di sini cara membangunnya supaya film 20 menit tetap rapi, deterministik, dan bisa dirender tanpa takut terputus.
 
@@ -191,6 +191,32 @@ node core/render/chunks.mjs "$HERE" --fps 24 --redo 7,8,9 --out "$HERE/out/video
 - Jangan menyerahkan film setengah jadi sebagai film final. Hapus `out/video.chunks/` setelah film final diperiksa.
 
 **Pemeriksaan.** `chunks.mjs` sudah mencocokkan jumlah frame setiap chunk dan film gabungannya. Selebihnya ada di DIRECTOR.md §11: loudness per bab (`ffmpeg -af ebur128` pada potongan per bab), sinkron di setiap awal bab, contact sheet per babak, `blackdetect` dan `freezedetect`.
+
+### Layar Lebar: di atas 20 menit, sampai 60 menit
+
+Film dibuat sebagai 2–3 bagian yang masing-masing adalah film Sangat panjang lengkap, lalu disambung tanpa re-encode.
+
+```
+<proyek>/
+  PROGRES.md           # status tiap bagian: naskah, rekaman, babak yang sudah dibangun, render, QC
+  NASKAH.md            # seluruh naskah, per bagian → babak → bab
+  CHAPTERS.txt         # chapter seluruh film (waktu total)
+  shared/              # pustaka adegan, mesin gaya, font, palet instrumen: satu sumber untuk semua bagian
+  bagian1/ bagian2/ …  # setiap bagian adalah folder film sendiri (timeline, vo, music, build.sh, out/)
+  build.sh             # menyalin shared/ ke setiap bagian, membangun setiap bagian, lalu menyambungnya
+```
+
+- **Satu bagian selesai dulu**, sampai `bagian1.mp4` lolos QC, sebelum bagian berikutnya dibangun. Catat statusnya di `PROGRES.md`: sesi berikutnya (atau sesi baru setelah konteks habis) membaca file ini dan melanjutkan dari situ.
+- **Satu sumber gaya.** Setiap perbaikan pustaka adegan dibuat di `shared/`, lalu disalin ulang ke semua bagian (`build.sh` melakukannya), supaya bagian 3 tidak terlihat seperti film lain. Bagian yang sudah dirender ulang hanya jika perubahannya memang mengenai bagian itu.
+- **Suara**: rekaman user satu file per bab, dengan awalan bagian (`p1_bab01`, `p1_bab02`, …, `p2_bab01`, …), di ruangan dan dengan jarak mikrofon yang sama untuk semua sesi rekaman. Bandingkan loudness dan warna suara rekaman bagian baru dengan bagian 1 sebelum produksi; jika jelas berbeda, minta rekam ulang atau samakan dengan EQ ringan.
+- **Musik**: satu tema yang sama untuk seluruh film, variasi per bagian; setiap bagian diawali dan diakhiri frase yang lengkap, sehingga sambungan terdengar seperti pergantian bab.
+- **Mix dan master per bagian** dengan `mux.sh` (fps, ukuran, dan grain sama untuk semua bagian), lalu sambung:
+
+```sh
+sh core/render/join.sh "$HERE/<nama>.mp4" "$HERE/bagian1/bagian1.mp4" "$HERE/bagian2/bagian2.mp4" --chapters "$HERE/CHAPTERS.txt"
+```
+
+`join.sh` menolak bagian yang ukuran, fps, codec, atau format audionya berbeda, menyambung tanpa re-encode, menulis chapter ke dalam MP4, lalu melaporkan durasi (dibandingkan dengan jumlah bagian) dan loudness seluruh film.
 
 ## 12. Di mana mencari di demo kami
 
