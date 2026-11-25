@@ -5,7 +5,7 @@ Repositori ini adalah library gaya film. Setiap gaya punya `styles/<slug>/STYLE.
 | Permintaan | Buka |
 |---|---|
 | Permintaan apa pun: lihat dulu gaya milik user; belum ada permintaan: tawarkan pilihan jalur | **Mulai** di bawah |
-| Film tentang topik user (kasus normal) | **Gaya dan cerita**, **Alur kerja** di bawah (voice over ditanyakan tepat setelah gaya jelas) |
+| Film tentang topik user (kasus normal) | **Gaya dan cerita**, **Alur kerja** di bawah (gaya naskah dan voice over ditanyakan tepat setelah gaya jelas, lalu naskah ditulis sebelum produksi) |
 | "Gaya apa saja yang ada?" / belum memilih gaya | **Mencari gaya** di bawah |
 | Penyutradaraan: cerita, suara, ritme, kamera, peta, pemeriksaan, penyerahan | [`DIRECTOR.md`](DIRECTOR.md) |
 | Pembangunan: instalasi, halaman, suara, musik, mix | [`TECHNIQUE.md`](TECHNIQUE.md) |
@@ -69,15 +69,24 @@ Mascot Screencast tidak disertai demo: maskotnya harus karakter piksel orisinal 
 
 ## Alur kerja
 
-1. **Voice over: wajib, pertanyaan tersendiri, tepat setelah gaya jelas.** Begitu gaya sudah dipilih (atau sudah disebut di permintaan), sebelum pertanyaan brief lainnya dan sebelum treatment, tanyakan voice over dengan satu `AskUserQuestion` tersendiri berjudul "Voice over". Jangan menggabungkannya dengan pertanyaan lain dan jangan memakai default diam-diam, karena jawabannya menentukan bentuk film (narasi suara atau teks di layar).
-   - **Uji dulu suara AI di sesi ini** sebelum bertanya: pasang tingkat voice bila belum (`… setup.sh deps voice`), lalu `"$LIB/.venv/bin/python" -m edge_tts --text "uji suara" --voice id-ID-GadisNeural --write-media /tmp/vo_test.mp3`. Uji berhasil hanya jika file mp3 itu terbentuk dan tidak kosong. Untuk bahasa lain pakai suara bahasa itu (`python -m edge_tts --list-voices`).
-   - **Opsi** (opsi pertama = rekomendasi):
-     1. **Suara AI** bahasa film: perempuan (`id-ID-GadisNeural`) atau laki-laki (`id-ID-ArdiNeural`) untuk bahasa Indonesia. Tawarkan hanya jika uji berhasil. Jika uji gagal (mis. sesi cloud memblokir layanan suara), sebutkan itu dalam satu kalimat di pertanyaan dan ganti opsi ini dengan: **film dibuat dulu dengan timing naskah, suara AI dibuat ulang lewat `build.sh` di komputer user**.
-     2. **Rekaman suara sendiri**: Anda menulis naskahnya dulu (kalimat pendek, ±2,5 kata per detik untuk bahasa Indonesia), mengirimkannya, lalu menunggu file rekaman; timing film disusun dari rekaman itu (transkripsi faster-whisper, TECHNIQUE.md §4).
-     3. **Tanpa voice over**: narasi tampil sebagai teks di layar (subtitle label) + musik.
-   - Jika user memilih suara AI, tanyakan juga suara perempuan atau laki-laki di pertanyaan yang sama (sebagai dua opsi terpisah), bukan di pesan berikutnya.
-   - Tunggu jawabannya, lalu lanjut ke brief. Jika user sudah menyebut voice over di permintaannya, lewati pertanyaan ini.
-2. **Brief.** Pastikan gaya dan topik jelas, lalu tanyakan ke user sekali, dalam satu pesan (DIRECTOR.md §1):
+1. **Naskah dan voice over: tepat setelah gaya jelas, sebelum brief lain dan treatment.** Jawabannya menentukan bentuk film (narasi suara atau teks di layar), jadi jangan pernah memakai default diam-diam.
+   1. **Satu `AskUserQuestion` dengan dua pertanyaan** (lewati yang sudah disebut user di permintaannya):
+      - **"Gaya naskah"**: Edukatif (rekomendasi untuk materi belajar: jelas, runtut, ramah pemula) · Formal / profesional · Santai / gaul · Storytelling (bercerita dengan tokoh dan konflik). Tool menambahkan Other untuk gaya lain (humor, inspiratif, jualan, dan sebagainya).
+      - **"Voice over"**: Rekam suara sendiri (rekomendasi: Anda menulis naskah, user merekam) · Suara AI perempuan atau laki-laki · Tanpa voice over (naskah tampil sebagai teks di layar + musik).
+      - **Uji suara AI dulu** sebelum bertanya: pasang tingkat voice bila belum (`… setup.sh deps voice`), lalu `"$LIB/.venv/bin/python" -m edge_tts --text "uji suara" --voice id-ID-GadisNeural --write-media /tmp/vo_test.mp3`. Uji berhasil hanya jika file mp3 itu terbentuk dan tidak kosong. Untuk bahasa lain pakai suara bahasa itu (`python -m edge_tts --list-voices`). Tawarkan suara AI (`id-ID-GadisNeural` perempuan, `id-ID-ArdiNeural` laki-laki) hanya jika uji berhasil; jika gagal (mis. sesi cloud memblokir layanan suara), sebutkan dalam satu kalimat dan ganti opsinya dengan: **suara AI dibuat ulang lewat `build.sh` di komputer user**.
+   2. **Tulis naskah** sesuai gaya naskah, topik, bahasa, dan durasi, lalu simpan sebagai `NASKAH.md` dan `vo/lines.json` di folder proyek:
+      - kalimat pendek bernomor (v1, v2, …), satu gagasan per kalimat; hook di kalimat pertama; penutup yang menggema pembuka;
+      - target jumlah kata ≈ durasi (detik) × 2,3 untuk bahasa Indonesia (sisakan ruang untuk jeda dan keheningan musik); cantumkan perkiraan detik per kalimat dan totalnya;
+      - di `lines.json`, angka ditulis seperti diucapkan di field `say` ("empat puluh") dan sebagai digit di `text` (subtitle); tandai istilah asing beserta cara bacanya di `NASKAH.md`.
+   3. **Kirim naskah dalam satu pesan, bersama pertanyaan brief langkah 2** (supaya tidak menambah putaran):
+      - naskah lengkap di chat sebagai tabel: no, kalimat, perkiraan detik;
+      - jika user merekam sendiri, sertakan panduan rekam: satu file utuh dengan jeda ±1 detik antar kalimat, atau satu file per kalimat bernama `v1`, `v2`, …; format WAV, MP3, atau M4A; ruang hening, jarak mulut 15–20 cm, tanpa musik latar; boleh sedikit improvisasi karena timing film mengikuti rekaman;
+      - minta user menyetujui naskah atau menyebut revisinya.
+   4. **Tunggu persetujuan naskah** dan revisi bila diminta. Lalu:
+      - **Rekam sendiri:** jangan memproduksi suara dan animasi sebelum file rekaman diterima; treatment dan style frame boleh dikerjakan sambil menunggu. Setelah file tiba, potong per kalimat bila masih satu file (deteksi jeda dengan `ffmpeg silencedetect`), periksa dan ambil timing per kata dengan `core/tts/asr_check.py` (faster-whisper), lalu susun timeline, subtitle, dan potongan gambar dari rekaman itu (TECHNIQUE.md §4).
+      - **Suara AI:** buat suaranya dari naskah yang disetujui (`core/tts/tts_zh.py … --voice <nama suara>`), lalu periksa dengan `asr_check.py`.
+      - **Tanpa voice over:** naskah menjadi teks di layar; pastikan setiap baris tampil cukup lama (`readcheck.mjs`).
+2. **Brief.** Pastikan gaya dan topik jelas, lalu tanyakan ke user sekali, dalam pesan yang sama dengan naskah (langkah 1.3; DIRECTOR.md §1):
    - apa pun tentang topik yang tidak bisa Anda putuskan sendiri (fakta; nama, logo, atau produk yang harus muncul);
    - apakah mereka punya materi sendiri: musik, foto, logo, font, dan untuk gaya yang dibangun dari materi nyata, data atau pindaian milik mereka;
    - bahasa film, jika belum jelas (default: bahasa yang mereka tulis atau pilih, untuk suara dan subtitle);
