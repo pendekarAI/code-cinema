@@ -11,6 +11,8 @@ Gaya, panduan, dan alat produksi ada di library Code Cinema (github.com/pendekar
 2. **Pasang alat inti sejak awal.** Segera jalankan `sh "<folder dasar skill>/scripts/setup.sh" deps`, di background jika bisa: pertama kali butuh beberapa menit. Tambahkan `deps voice` atau `deps music` belakangan, hanya jika film membutuhkannya (`$LIB/TECHNIQUE.md` §1). Laporkan alat sistem yang belum ada (Node 20+, ffmpeg 7+, Python 3.11+ atau uv) dalam satu putaran pertanyaan; jangan memasang software sistem sendiri. Gaya bertanda ✦ juga butuh generator gambar yang disediakan user (`$LIB/AGENTS.md`, Alur kerja, Brief). Paket yang dibutuhkan sebuah gaya (tercantum di `STYLE.md`-nya) dipasang sendiri, ke folder proyek.
 3. **Ikuti panduan library.** Baca `$LIB/AGENTS.md` dan kerjakan sesuai isinya, mulai dari bagian **Mulai** (gaya milik user di `~/code-cinema-styles/`; jika skill dipanggil tanpa permintaan, tanyakan bahasa dulu, lalu pilihan jalurnya): mencari gaya atau membuat gaya sendiri, satu putaran pertanyaan, treatment, produksi, dan penyerahan hasil.
 
+4. **Voice over wajib ditanyakan tepat setelah gaya jelas**, sebagai pertanyaan `AskUserQuestion` tersendiri, sebelum brief dan treatment (`$LIB/AGENTS.md`, Alur kerja langkah 1). Uji dulu suara AI di sesi ini dengan edge-tts; tawarkan suara AI (perempuan/laki-laki) hanya jika uji berhasil, rekaman suara sendiri (Anda tulis naskahnya dulu), atau tanpa voice over (teks di layar). Jangan memakai default diam-diam.
+
 Yang berbeda dalam mode skill:
 
 | | |

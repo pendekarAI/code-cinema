@@ -5,7 +5,7 @@ Repositori ini adalah library gaya film. Setiap gaya punya `styles/<slug>/STYLE.
 | Permintaan | Buka |
 |---|---|
 | Permintaan apa pun: lihat dulu gaya milik user; belum ada permintaan: tawarkan pilihan jalur | **Mulai** di bawah |
-| Film tentang topik user (kasus normal) | **Gaya dan cerita**, **Alur kerja** di bawah |
+| Film tentang topik user (kasus normal) | **Gaya dan cerita**, **Alur kerja** di bawah (voice over ditanyakan tepat setelah gaya jelas) |
 | "Gaya apa saja yang ada?" / belum memilih gaya | **Mencari gaya** di bawah |
 | Penyutradaraan: cerita, suara, ritme, kamera, peta, pemeriksaan, penyerahan | [`DIRECTOR.md`](DIRECTOR.md) |
 | Pembangunan: instalasi, halaman, suara, musik, mix | [`TECHNIQUE.md`](TECHNIQUE.md) |
@@ -69,9 +69,17 @@ Mascot Screencast tidak disertai demo: maskotnya harus karakter piksel orisinal 
 
 ## Alur kerja
 
-1. **Brief.** Pastikan gaya dan topik jelas, lalu tanyakan ke user sekali, dalam satu pesan (DIRECTOR.md §1):
+1. **Voice over: wajib, pertanyaan tersendiri, tepat setelah gaya jelas.** Begitu gaya sudah dipilih (atau sudah disebut di permintaan), sebelum pertanyaan brief lainnya dan sebelum treatment, tanyakan voice over dengan satu `AskUserQuestion` tersendiri berjudul "Voice over". Jangan menggabungkannya dengan pertanyaan lain dan jangan memakai default diam-diam, karena jawabannya menentukan bentuk film (narasi suara atau teks di layar).
+   - **Uji dulu suara AI di sesi ini** sebelum bertanya: pasang tingkat voice bila belum (`… setup.sh deps voice`), lalu `"$LIB/.venv/bin/python" -m edge_tts --text "uji suara" --voice id-ID-GadisNeural --write-media /tmp/vo_test.mp3`. Untuk bahasa lain pakai suara bahasa itu (`python -m edge_tts --list-voices`).
+   - **Opsi** (opsi pertama = rekomendasi):
+     1. **Suara AI** bahasa film: perempuan (`id-ID-GadisNeural`) atau laki-laki (`id-ID-ArdiNeural`) untuk bahasa Indonesia. Tawarkan hanya jika uji berhasil. Jika uji gagal (mis. sesi cloud memblokir layanan suara), sebutkan itu dalam satu kalimat di pertanyaan dan ganti opsi ini dengan: **film dibuat dulu dengan timing naskah, suara AI dibuat ulang lewat `build.sh` di komputer user**.
+     2. **Rekaman suara sendiri**: Anda menulis naskahnya dulu (kalimat pendek, ±2,5 kata per detik untuk bahasa Indonesia), mengirimkannya, lalu menunggu file rekaman; timing film disusun dari rekaman itu (transkripsi faster-whisper, TECHNIQUE.md §4).
+     3. **Tanpa voice over**: narasi tampil sebagai teks di layar (subtitle label) + musik.
+   - Jika user memilih suara AI, tanyakan juga suara perempuan atau laki-laki di pertanyaan yang sama (sebagai dua opsi terpisah), bukan di pesan berikutnya.
+   - Tunggu jawabannya, lalu lanjut ke brief. Jika user sudah menyebut voice over di permintaannya, lewati pertanyaan ini.
+2. **Brief.** Pastikan gaya dan topik jelas, lalu tanyakan ke user sekali, dalam satu pesan (DIRECTOR.md §1):
    - apa pun tentang topik yang tidak bisa Anda putuskan sendiri (fakta; nama, logo, atau produk yang harus muncul);
-   - apakah mereka punya materi sendiri: rekaman suara atau suara pilihan, musik, foto, logo, font, dan untuk gaya yang dibangun dari materi nyata, data atau pindaian milik mereka;
+   - apakah mereka punya materi sendiri: musik, foto, logo, font, dan untuk gaya yang dibangun dari materi nyata, data atau pindaian milik mereka;
    - bahasa film, jika belum jelas (default: bahasa yang mereka tulis atau pilih, untuk suara dan subtitle);
    - apakah mereka ingin melihat storyboard dulu (default: tidak);
    - apa pun yang belum ada di komputer mereka: sebelum bertanya, jalankan `sh plugin/skills/code-cinema-by-megabagus/scripts/setup.sh` dari root library (tanpa argumen: butuh beberapa detik dan menampilkan semua alat sistem yang belum ada sekaligus) dan sertakan laporannya. Jalankan `… setup.sh deps` (inti saja) di background, jika belum berjalan: pertama kali butuh beberapa menit. Tambahkan tingkat voice dan music belakangan, hanya jika film membutuhkannya (TECHNIQUE.md §1);
@@ -80,11 +88,11 @@ Mascot Screencast tidak disertai demo: maskotnya harus karakter piksel orisinal 
    **Gaya bertanda ✦ menggambar dengan generator gambar** (`style.json`-nya memuat `"needs": ["image-generation"]`). Jalankan `python3 core/image/gen_image.py --check` dari root library sebelum menulis pertanyaan, bersama `setup.sh`. Jika gagal, sertakan alasannya dan pertanyaannya di pesan yang sama: dengan apa mereka akan membuat gambar (API atau aplikasi gambar lain, atau gambar mereka sendiri; Anda memberikan prompt dan nama file)? Tanpa generator gambar sama sekali, sampaikan dengan jelas bahwa film dengan gaya ini tidak bisa dimulai, dan tawarkan dua atau tiga gaya lain yang cocok dengan topik mereka. Jangan pernah menggambar karakter dengan kode sebagai pengganti.
 
    Lewati yang sudah dijawab permintaan mereka. Tunggu balasan, isi celah lain dengan default yang masuk akal, ringkas brief dalam beberapa baris, lalu mulai. Jangan kembali dengan pertanyaan lagi.
-2. **Treatment.** Tulis `TREATMENT.md` di folder proyek (DIRECTOR.md §4), sebelum membuka demo (gaya Edit & Documentary mengumpulkan materinya dulu: **Treatment dulu** di atas).
-3. **Tampilan.** Render style frame atau model sheet dengan kode gambar yang sebenarnya dan periksa terhadap `STYLE.md` (DIRECTOR.md §5).
-4. **Storyboard, hanya jika user memintanya** (DIRECTOR.md §5). **Berhenti dan tunggu persetujuan.** Jika tidak, jangan berhenti.
-5. **Produksi.** Suara → pemeriksaan → score (bisa paralel) → animasi → mix → render (TECHNIQUE.md).
-6. **Periksa sendiri dan serahkan** (DIRECTOR.md §11).
+3. **Treatment.** Tulis `TREATMENT.md` di folder proyek (DIRECTOR.md §4), sebelum membuka demo (gaya Edit & Documentary mengumpulkan materinya dulu: **Treatment dulu** di atas).
+4. **Tampilan.** Render style frame atau model sheet dengan kode gambar yang sebenarnya dan periksa terhadap `STYLE.md` (DIRECTOR.md §5).
+5. **Storyboard, hanya jika user memintanya** (DIRECTOR.md §5). **Berhenti dan tunggu persetujuan.** Jika tidak, jangan berhenti.
+6. **Produksi.** Suara → pemeriksaan → score (bisa paralel) → animasi → mix → render (TECHNIQUE.md).
+7. **Periksa sendiri dan serahkan** (DIRECTOR.md §11).
 
 Laporkan progres dalam bahasa user. Jika sebuah langkah gagal, baca error-nya, perbaiki penyebabnya, dan coba lagi; kembali ke user hanya untuk keputusan atau sesuatu yang hanya bisa mereka berikan.
 
