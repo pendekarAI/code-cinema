@@ -62,11 +62,12 @@ Framing: subject inside the plate mark, labels and roundels in the margins; orde
 
 ## 7. Sound palette
 
-- **Foley by material**: paper (peel crackle, slip tapped down, tissue rustle, sheet whoosh); press (roller rumble, thump); copper and steel (high band-passed burin hiss with chatter and faint plate ring, swarf pings, a tick on lift, circular scribe, burnishing rub); ink and water (pen scratch, ticks for cut letters, a water plip and wet brush swish). Hatching = micro-scratches denser each pass.
+- **Foley by material**: paper (peel crackle, slip tapped down, tissue rustle, sheet whoosh); press (roller rumble, thump); copper and steel (high band-passed burin hiss with chatter and faint plate ring, swarf pings, a tick on lift, circular scribe, burnishing rub); ink and water (pen scratch, ticks for cut letters, a water plip and wet brush swish). Hatching = micro-scratches denser each pass. Density, not loudness, carries the build-up: every copper sound stays soft.
 - **Room**: a quiet workroom (faint clock), paper room once the print exists.
 - **Instruments** (choose): harpsichord, string quartet, solo cello or viola da gamba, lute, chamber organ, glass harmonica for a cold subject. Plucked and dry while lines are cut; bowed or sustained only when something soft arrives; tiny tings for a scribed ring, a low pluck on landing.
 - **Silence** is real: cut room tone too, keep at most one small sound.
 - **Mix**: melody an octave above the voice, music ~half under speech, −14 LUFS. Voice: a quiet curator or naturalist.
+- **The burin never covers the narrator.** The copper hiss (2.6–12 kHz) and the hatching scratches are the loudest, harshest foley in the style, so level the whole foley layer against the voice with `core.audio.sfx.under_voice(foley, voice, mask, speak_db=26, pause_db=12, air_hz=6500)`: its loud moments stay ≥ 26 dB under him while he speaks (1–4 kHz carved out), ≥ 12 dB under him in the silences, nothing above 6.5 kHz. A silent copper opening may carry the burin alone, still at that pause level. Check the printed `speech_gap_db` (≥ 24) before muxing.
 
 ## 8. Native moves
 

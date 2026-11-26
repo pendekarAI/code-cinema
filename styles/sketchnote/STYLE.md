@@ -71,10 +71,10 @@ A camera over a flat page: one world → screen function, zoom in log space, cen
 
 ## 7. Sound palette
 
-- **Foley from the strokes**: fineliner scratch (band-passed noise 2.4–6.5 kHz with paper-tooth grain), lettering (same pen, choppier), marker (softer, 0.7–3.2 kHz, a "fsh" per streak); level follows how many strokes are active on screen, with a soft ceiling; pan follows where the stroke is on screen; a faint nib tick on longer strokes. Paper-and-air whooshes for whips, dives, match cuts and the pull-back.
+- **Foley from the strokes**: fineliner scratch (band-passed noise 2.4–6.5 kHz with paper-tooth grain), lettering (same pen, choppier), marker (softer, 0.7–3.2 kHz, a "fsh" per streak); level follows how many strokes are active on screen, with a soft ceiling, and is always set against the narration, never on its own (below); pan follows where the stroke is on screen; a faint nib tick on longer strokes. Paper-and-air whooshes for whips, dives, match cuts and the pull-back.
 - **Music**: small, wooden and plucked: marimba, pizzicato strings, kalimba accents, glockenspiel for sparkle, harp and vibraphone for a closing chord; bowed vibraphone for held, airy moments. No pads that fill the page's silence, no drums.
 - **Silence is pen-only**: the first seconds can be just the pen.
-- **Voice**: warm and clear, a teacher talking, slow (≈ 2–2.6 words/s), phrases split at commas with short breaths. Compress the voice, keep it ≈ 10 dB over the music by RMS; the music gives way in 300 Hz–4 kHz and ducks while she speaks; pens step back under the voice. Master −14 LUFS.
+- **Voice**: warm and clear, a teacher talking, slow (≈ 2–2.6 words/s), phrases split at commas with short breaths. Compress the voice, keep it ≈ 10 dB over the music by RMS; the music gives way in 300 Hz–4 kHz and ducks while she speaks. **The pens never cover the voice**: run the whole foley layer through `core.audio.sfx.under_voice(foley, voice, mask, speak_db=24, pause_db=10)` after the voice has its final gain, so the scratch's loud moments sit ≥ 24 dB under her while she speaks (1–4 kHz carved out), ≥ 10 dB under her between sentences, and nothing above 7 kHz; the pen is a texture you notice in the pauses, not over the words. Check the printed `speech_gap_db` (≥ 22) before muxing. Master −14 LUFS.
 
 ## 8. Native moves
 

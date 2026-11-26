@@ -142,6 +142,7 @@ Render 6–9 shot kunci dengan kode gambar yang sebenarnya, disusun dalam satu l
 - **Satu putaran perbaikan.** Perbaiki semua yang ditemukan review dan pemeriksaan di bawah dalam satu putaran, lalu periksa sekali lagi. Perbaikan kecil yang ditemukan pemeriksaan kedua (level suara, satu frame) termasuk putaran yang sama; yang lebih besar, sampaikan ke user dalam satu baris saat menyerahkan. Catatan user setelah penyerahan adalah putaran baru: ubah hanya yang mereka minta.
 - **Jangan mengulang demo.** Setelah treatment, baca `DEMO.md` dan bandingkan: struktur, pembukaan, signature shot, jalur kamera, bentuk musik, akhir. Minimal empat dari enam harus berbeda; pikirkan ulang yang sama. Sebelum penyerahan, taruh contact sheet Anda di samping still demo (`styles/<slug>/demo/stills/styleframe.jpg`, bila ada) sebagai pemeriksaan terakhir.
 - Suara: setiap kalimat tertranskripsi kembali dengan benar (pemeriksaan speech-to-text). Untuk Mandarin, satu karakter salah dengar di kalimat pendek itu wajar: dengarkan, dan jika benar, biarkan pemeriksaan mengharapkan apa yang didengar model (TECHNIQUE.md §4).
+- Narasi selalu jelas: foley ≥ 22 dB di bawah narasi saat bicara (`speech_gap_db` dari `under_voice`); dengarkan satu kalimat di bagian foley paling ramai.
 - Loudness sekitar −14 LUFS; tidak ada frame hitam, tidak ada frame NaN; subtitle sinkron dan tidak menutupi aksi kunci.
 - Setiap baris tabel desain suara benar-benar ada di mix.
 - Setiap peta, globe, atau tampilan satelit lolos bagian 13, diperiksa dalam keadaan diperbesar.

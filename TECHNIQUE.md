@@ -116,6 +116,7 @@ Tulis score orisinal dari cue map, dengan instrumen dari palet suara gaya itu; t
 ## 6. Efek suara dan mix
 
 - `core/audio/sfx.py` menyintesis foley secara prosedural (klik, whoosh, dentum, ding, kertas, lapisan noise…) dengan filter, envelope, dan `add(buffer, sound, at, gain, pan)`. Gerakkan dari `window.EV`, supaya setiap suara jatuh tepat di frame-nya.
+- **Foley tidak pernah menutupi narasi.** Atur level foley relatif terhadap suara narasi, bukan berdiri sendiri: setelah suara punya gain final, jalankan seluruh lapisan foley lewat `core.audio.sfx.under_voice(foley, voice, mask)`. Default-nya: momen paling keras foley ≥ 24 dB di bawah narasi saat bicara (pita konsonan 1–4 kHz dikosongkan), ≥ 10 dB di bawah narasi di jeda, dan desis di atas 7 kHz dipangkas. Untuk foley yang tajam (goresan pena, pensil, spidol, pahat burin, pisau ukir) pakai minimal angka itu; gaya bisa menetapkan lebih ketat. Fungsi ini hanya menurunkan, tidak pernah menaikkan, dan mencetak `speech_gap_db` / `pause_gap_db` untuk dicek sebelum mux. Berlaku sama untuk rekaman user dan suara AI.
 - **Master**: `sh core/render/mux.sh video.mp4 mix.wav out.mp4 24 [grain]` menggabungkan (mux), menjalankan loudnorm dua tahap ke −14 LUFS dengan batas true-peak, menambahkan grain di ffmpeg, dan menampilkan loudness terukur; keluar dengan kode bukan nol jika ada kegagalan. Di latar terang pakai grain lebih sedikit; untuk gaya piksel dan vektor, tanpa grain.
 - Film dengan grain yang tertanam di gambar terkompres buruk; encode ulang dengan `-tune grain` dan CRF lebih tinggi.
 

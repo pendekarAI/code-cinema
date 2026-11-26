@@ -1,4 +1,5 @@
 """Sound for the full film (50 s): English narration + pen foley + a light score that makes room for the voice.
+The pen foley is levelled against the narration (core.audio.sfx.under_voice), never the other way round.
 
 Inputs (all in this folder): timeline.json (narration starts and subtitle cues), voice/out/*.wav (Kokoro),
 events.json (one event per stroke + the story cues, exported from index.html).
@@ -9,7 +10,7 @@ import numpy as np, soundfile as sf, soxr
 LIB = os.environ.get('LIB') or os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 sys.path.insert(0, LIB)
 from core.audio import sampler as S
-from core.audio.sfx import SR, bp, lp, hp, add, compress, limit, click, whoosh
+from core.audio.sfx import SR, bp, lp, hp, add, compress, limit, click, whoosh, under_voice
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TL = json.load(open(os.path.join(HERE, 'timeline.json')))
@@ -79,7 +80,6 @@ for kind, (lo, hi, gh, dep, rate, pw, g, sd) in {
 for e in EV:
     if e['type'] in ('pen', 'write') and e['d'] >= 0.12:
         add(foley, hp(click(pitch=0.55 + rng.random() * 0.2, v=1.0), 1500) * 0.04, e['t'], 1.0, e.get('pan', 0) * 0.6)
-foley *= (1 - 0.5 * duck)[:, None]                                   # pens step back under the voice
 room = lp(rng.standard_normal(N), 500, 2) * 0.004
 foley += np.stack([room, np.roll(room, 997)], 1)
 # the drop lands in the spoon
@@ -139,6 +139,10 @@ fade = np.clip((DUR - tt) / 0.8, 0, 1); music *= fade[:, None]
 spk = vmask > 0
 m_rms = rms(music[spk].mean(1)); v_rms = rms(vo[spk])
 vg = (m_rms * 10 ** (10 / 20)) / v_rms
+# pens sit far under the voice: >= 24 dB below her while she speaks (1-4 kHz carved out), >= 10 dB below between
+# sentences, nothing above 7 kHz. Measured against the voice itself, so a quiet recording gets quieter pens too.
+foley, FR = under_voice(foley, vo * vg, vmask, speak_db=24, pause_db=10)
+print('pens under the voice:', FR)
 mix = foley + music + np.stack([vo * vg, vo * vg], 1)
 print(f'voice vs music (RMS while speaking): {db(rms(vo[spk]) * vg) - db(rms(music[spk].mean(1))):.1f} dB;'
       f' voice vs pens: {db(rms(vo[spk]) * vg) - db(rms(foley[spk].mean(1))):.1f} dB')

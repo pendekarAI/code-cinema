@@ -1,10 +1,10 @@
 # Sound for "The Honeybee, Plate VII": three layers (room tone, foley keyed to the film's events, the baroque score),
-# the narrator on top with the score ducked under him. Run from the repo root:
+# the narrator on top with the score ducked under him and the foley (burin, hatching, paper) levelled against him. Run from the repo root:
 #   .venv/bin/python styles/engraving/demo/mix.py
 # reads demo/events.json (node core/render/events.mjs), demo/voices/*.wav, demo/music/stems/*.wav; writes demo/mix.wav
 import sys, os, json, numpy as np, soundfile as sf, soxr
 sys.path.insert(0, '.')
-from core.audio.sfx import SR, add, bp, lp, hp, noise, brown, env_exp, t_, limit, compress, norm
+from core.audio.sfx import SR, add, bp, lp, hp, noise, brown, env_exp, t_, limit, compress, norm, under_voice
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 WORK = os.environ.get('ENG_WORK') or HERE     # ENG_WORK: work folder with events.json, voices/, music/stems (alt content)
@@ -149,7 +149,13 @@ k = int(0.12 * SR); duck = np.convolve(duck, np.ones(k) / k, mode='same')
 music = load('harpsichord.wav') * duck[:, None] ** 0.8 + load('pizz.wav') * duck[:, None] + load('bowed.wav') * (0.3 + 0.7 * duck[:, None])
 music *= 0.9
 
-mix = room + foley * 1.0 + music + voice
+# the burin and every other foley sit far under the narrator: >= 26 dB below him while he speaks (1-4 kHz carved out),
+# >= 12 dB below him in the silences, nothing above 6.5 kHz (the copper hiss lives at 2.6-12 kHz and tires the ear).
+vmask = np.zeros(N)
+for a, b2 in vwin: vmask[max(0, int(a * SR)):min(N, int(b2 * SR))] = 1
+foley, FR = under_voice(foley, voice, vmask, speak_db=26, pause_db=12, air_hz=6500)
+print('foley under the voice:', FR)
+mix = room + foley + music + voice
 mix = limit(mix, 0.95)
 sf.write(os.path.join(WORK, 'mix.wav'), mix.astype(np.float32), SR)
 os.makedirs(os.path.join(HERE, 'out'), exist_ok=True); json.dump([dict(t0=a, t1=b2) for a, b2 in vwin], open(os.path.join(HERE, 'out', 'vo_windows.json'), 'w'))

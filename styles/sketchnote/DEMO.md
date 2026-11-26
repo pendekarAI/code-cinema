@@ -48,7 +48,7 @@ Native moves spent: the page writes itself (throughout), one colour as the threa
 - Music enters on the question (8.0 s): F major, 100 bpm, soft marimba on the beat, pizzicato cello, a kalimba note on each new block; chords change with the story (F, Dm, Bb, Gm for the dive with bowed vibraphone, C, Am, Bb, F on "Honey.", Dm, Bb).
 - Glockenspiel sparkles on "Honey."; on the pull-back the glockenspiel climbs, then half a beat of rest (47.0–47.5 s) and the closing chord (harp strum, glockenspiel, vibraphone, low pizzicato) at 47.5 s, ringing out to 51 s.
 - Whooshes of paper and air on the whip (7.7 s), match cut (15.4 s), dive (20.1 s) and pull-back (44.2 s).
-- Mix: voice compressed, ≈ 10 dB over the music by RMS while she speaks (≈ 9.4 dB over the pens); music −4 dB in 300 Hz–4 kHz and ducked ≈ 5 dB under the voice; master −14 LUFS.
+- Mix: voice compressed, ≈ 10 dB over the music by RMS while she speaks; pens levelled against the voice with `under_voice` (loud moments ≥ 24 dB under her while she speaks, ≥ 10 dB between sentences, low-passed at 7 kHz; the first version sat only ≈ 9 dB under her and its peaks could cover the words); music −4 dB in 300 Hz–4 kHz and ducked ≈ 5 dB under the voice; master −14 LUFS.
 - Voice: Kokoro `af_heart`, speed 0.78 (0.74 for the invertase line), 11 lines split into phrases with 0.32 s breaths; 1.9–2.6 words/s.
 
 ## Palette & props

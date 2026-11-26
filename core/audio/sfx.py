@@ -137,3 +137,55 @@ def add(buf, x, at, gain=1.0, pan=0.0):
     if s < 0: x = x[-s:]; s = 0
     e = min(len(buf), s + len(x)); l, r = np.cos((pan + 1) * np.pi / 4), np.sin((pan + 1) * np.pi / 4)
     buf[s:e, 0] += x[:e - s] * gain * l * 1.414; buf[s:e, 1] += x[:e - s] * gain * r * 1.414
+
+
+def _st_rms(x, win=0.05):
+    from scipy.ndimage import uniform_filter1d
+    return np.sqrt(uniform_filter1d(np.square(x), size=max(1, int(win * SR))) + 1e-12)
+
+
+def under_voice(foley, voice, mask=None, speak_db=24.0, pause_db=10.0, carve_db=8.0, air_hz=7000.0,
+                lead=0.12, tail=0.3):
+    """Sit a foley layer (pen scratch, burin hiss, paper…) under the narration so it never covers the voice.
+
+    foley, voice: (N,) or (N, 2), with the voice already at the gain it will have in the mix.
+    mask: (N,) 1 while someone is speaking (None → found from the voice's own envelope).
+    speak_db: the foley's loud moments (95th pct of 50 ms RMS) stay at least this many dB under the voice's average
+              level while she speaks. pause_db: the same, between sentences (the foley may be heard, never louder
+              than the voice). carve_db: extra cut of 1–4 kHz (where the consonants live) while she speaks.
+    air_hz: low-pass on the foley; hiss above it (burin, fineliner) is what tires the ear and fights sibilance.
+    It only ever turns the foley down, never up. Returns (foley, report) with the measured gaps in dB.
+    """
+    from scipy.ndimage import uniform_filter1d
+    st = foley.ndim == 2; F = foley if st else foley[:, None]
+    V = voice.mean(1) if voice.ndim == 2 else voice
+    N = len(V)
+    if mask is None:
+        e = _st_rms(V, 0.03); mask = (e > e.max() * 10 ** (-35 / 20)).astype(float)
+    mask = np.asarray(mask, float)[:N]
+    if mask.max() <= 0:
+        return foley, dict(speech_gap_db=None, pause_gap_db=None)
+    # widen the speaking zone (the pen steps back just before she starts and comes back after), with eased edges
+    from scipy.ndimage import maximum_filter1d
+    w = maximum_filter1d(mask, size=int((lead + tail) * SR) + 1, origin=int((tail - lead) / 2 * SR))
+    w = np.clip(uniform_filter1d(w, size=int(0.1 * SR)), 0, 1)
+    F = np.stack([lp(F[:, c], air_hz, 4) for c in range(F.shape[1])], 1)
+    if carve_db > 0:
+        k = 1 - 10 ** (-carve_db / 20)
+        F = F - k * w[:, None] * np.stack([bp(F[:, c], 1000, 4000, 2) for c in range(F.shape[1])], 1)
+    v_lvl = float(np.sqrt(np.mean(np.square(V[mask > 0.5])) + 1e-12))
+    env = _st_rms(F.mean(1)); act = env > env.max() * 10 ** (-45 / 20)
+
+    def loud(sel):
+        s = sel & act
+        return float(np.percentile(env[s], 95)) if s.sum() > int(0.05 * SR) else None
+    sp, pa = loud(w > 0.5), loud(w <= 0.5)
+    gp = min(1.0, v_lvl * 10 ** (-pause_db / 20) / pa) if pa else 1.0
+    gs = min(gp, v_lvl * 10 ** (-speak_db / 20) / sp) if sp else gp
+    g = gp + (gs - gp) * w
+    F = F * g[:, None]
+    env2 = _st_rms(F.mean(1)); db = lambda a: 20 * np.log10(a + 1e-12)
+    rep = dict(speech_gap_db=round(float(db(v_lvl) - db(np.percentile(env2[(w > 0.5) & act], 95))), 1) if sp else None,
+               pause_gap_db=round(float(db(v_lvl) - db(np.percentile(env2[(w <= 0.5) & act], 95))), 1) if pa else None,
+               turned_down_db=round(float(-db(gs)), 1))
+    return (F if st else F[:, 0]), rep
