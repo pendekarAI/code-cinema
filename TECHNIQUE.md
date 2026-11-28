@@ -161,18 +161,18 @@ Kategori durasi dan strukturnya ada di DIRECTOR.md §1. Di sini cara membangunny
 ```
 <proyek>/
   timeline.js          # menggabungkan bab: SECS, SUBS, EV global; DUR dari rekaman
-  timeline/bab01.js …  # satu file per bab (film > 5 menit: per babak, berisi bab-babnya)
+  timeline/bab01.js …  # satu file per bab (film > 5 menit: per bagian, berisi bab-babnya)
   scenes/              # pustaka adegan: fungsi (ctx, t_lokal, data) untuk tiap jenis adegan
   vo/bab01/ …          # lines.json dan WAV per bab
 ```
 
 - `render(t)` mencari bab aktif dari `t` (pencarian biner pada waktu mulai bab), lalu memanggil adegan bab itu dengan waktu lokal. Tetap deterministik: tanpa state antar frame, angka acak dari seed ID elemen.
-- Setiap bab bisa diuji sendiri: `still.mjs <proyek> --range <awal>:<akhir>:2` untuk rentang bab itu, sebelum bab berikutnya ditulis. Film > 5 menit dibangun dan diuji **per babak**: selesaikan babak 1 (gambar, suara, subtitle) sebelum menulis babak 2.
+- Setiap bab bisa diuji sendiri: `still.mjs <proyek> --range <awal>:<akhir>:2` untuk rentang bab itu, sebelum bab berikutnya ditulis. Film > 5 menit dibangun dan diuji **per bagian**: selesaikan bagian 1 (gambar, suara, subtitle) sebelum menulis bagian 2. (Di Layar Lebar, kelompok bab di dalam tiap bagian disebut segmen; di sana bangun dan uji per segmen.)
 - Aset besar (font, tekstur, HDR) dimuat sekali sebelum `READY`, dan tingkat skala gambar besar di-cache sekali, bukan per frame.
 
 **Suara per bab.** Naskah di `NASKAH.md` dikelompokkan per bab; kalimat diberi ID bab (`b01_v01`, `b01_v02`, …). Rekaman user untuk film > 5 menit datang satu file per bab (`bab01.wav`, `bab02.wav`, …): periksa tiap file dengan `asr_check.py`, sambung dengan jeda ±0,7 detik, dan jadikan offset tiap file sebagai waktu mulai bab di timeline. TTS dibuat per bab dengan suara dan pengaturan yang sama persis; jangan membuat ulang satu bab dengan pengaturan lain.
 
-**Musik.** Satu cue per bab atau per babak, dari palet instrumen yang sama, dengan transisi di pergantian bab (crossfade 1–2 detik atau satu hening musik). Tulis score per babak ke stem terpisah (`music/babak1.wav`, …) lalu sambung; satu array numpy untuk 20 menit stereo 48 kHz float64 makan ±0,9 GB memori. Musik di-duck di bawah suara sepanjang film. Untuk film > 5 menit boleh 2–3 tema yang bergantian per babak.
+**Musik.** Satu cue per bab atau per bagian, dari palet instrumen yang sama, dengan transisi di pergantian bab (crossfade 1–2 detik atau satu hening musik). Tulis score per bagian ke stem terpisah (`music/bagian1.wav`, …; di Layar Lebar per segmen, `music/segmen1.wav`, …) lalu sambung; satu array numpy untuk 20 menit stereo 48 kHz float64 makan ±0,9 GB memori. Musik di-duck di bawah suara sepanjang film. Untuk film > 5 menit boleh 2–3 tema yang bergantian per bagian.
 
 **Render: `core/render/chunks.mjs`.** Film di atas 60 detik dirender per chunk, bukan dengan `video.mjs` sekali jalan:
 
@@ -191,7 +191,7 @@ node core/render/chunks.mjs "$HERE" --fps 24 --redo 7,8,9 --out "$HERE/out/video
 - Jangan menurunkan resolusi, menaikkan CRF, atau menyederhanakan animasi di bab akhir demi mengejar waktu render. Jika waktu atau disk tidak cukup (sediakan ±2 GB untuk film 20 menit pada 1080p), laporkan dan minta keputusan.
 - Jangan menyerahkan film setengah jadi sebagai film final. Hapus `out/video.chunks/` setelah film final diperiksa.
 
-**Pemeriksaan.** `chunks.mjs` sudah mencocokkan jumlah frame setiap chunk dan film gabungannya. Selebihnya ada di DIRECTOR.md §11: loudness per bab (`ffmpeg -af ebur128` pada potongan per bab), sinkron di setiap awal bab, contact sheet per babak, `blackdetect` dan `freezedetect`.
+**Pemeriksaan.** `chunks.mjs` sudah mencocokkan jumlah frame setiap chunk dan film gabungannya. Selebihnya ada di DIRECTOR.md §11: loudness per bab (`ffmpeg -af ebur128` pada potongan per bab), sinkron di setiap awal bab, contact sheet per bagian, `blackdetect` dan `freezedetect`.
 
 ### Layar Lebar: di atas 20 menit, sampai 60 menit
 
@@ -199,8 +199,8 @@ Film dibuat sebagai 2–3 bagian yang masing-masing adalah film Sangat panjang l
 
 ```
 <proyek>/
-  PROGRES.md           # status tiap bagian: naskah, rekaman, babak yang sudah dibangun, render, QC
-  NASKAH.md            # seluruh naskah, per bagian → babak → bab
+  PROGRES.md           # status tiap bagian: naskah, rekaman, segmen yang sudah dibangun, render, QC
+  NASKAH.md            # seluruh naskah, per bagian → segmen → bab
   CHAPTERS.txt         # chapter seluruh film (waktu total)
   shared/              # pustaka adegan, mesin gaya, font, palet instrumen: satu sumber untuk semua bagian
   bagian1/ bagian2/ …  # setiap bagian adalah folder film sendiri (timeline, vo, music, build.sh, out/)
